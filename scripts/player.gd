@@ -8,27 +8,28 @@ func _physics_process(delta):
 	move_and_slide()
 
 func player_movement(delta):
-	velocity = Vector2.ZERO
+	var movement_velocity = Vector2.ZERO
 	
 	if Input.is_action_pressed("ui_right"):
 		current_dir = "right"
-		play_anim(1)
-		velocity.x += speed
+		movement_velocity.x += speed
 	elif Input.is_action_pressed("ui_left"):
 		current_dir = "left"
-		play_anim(1)
-		velocity.x -= speed
+		movement_velocity.x -= speed
+		
 	if Input.is_action_pressed("ui_down"):
 		current_dir = "down"
-		play_anim(1)
-		velocity.y += speed
+		movement_velocity.y += speed
 	elif Input.is_action_pressed("ui_up"):
 		current_dir = "up"
-		play_anim(1)
-		velocity.y -= speed
-	else:
+		movement_velocity.y -= speed
+		
+	if movement_velocity == Vector2.ZERO:
 		play_anim(0)
-		velocity.y = 0
+	else:
+		play_anim(1)
+	
+	velocity = movement_velocity  # Assign movement_velocity to the velocity property
 		
 func play_anim(movement):
 	var dir = current_dir
@@ -40,22 +41,19 @@ func play_anim(movement):
 			anim.play("side_walk")
 		else:
 			anim.play("side_idle")
-	if dir == "left":
+	elif dir == "left":
 		anim.flip_h = true
 		if movement == 1:
 			anim.play("side_walk")
 		else:
 			anim.play("side_idle")
-	
-	if dir == "down":
-		# anim.flip_h = true
+	elif dir == "down":
 		if movement == 1:
 			anim.play("front_walk")
-		elif movement == 0:
+		else:
 			anim.play("front_idle")
-	if dir == "up":
-		# anim.flip_h = true
+	elif dir == "up":
 		if movement == 1:
 			anim.play("back_walk")
-		elif movement == 0:
+		else:
 			anim.play("back_idle")
